@@ -6,8 +6,7 @@
 * Enjoy a simple web UI with unlimited time AI Enhancer 😋 (Uploaded videos will be compressed with h264)
 * A guide to understand the params in GUI. https://docs.dolby.io/media-apis/docs/audio-quality (look for the Audio Guide section of the left menu)
 
-
-
+![image](https://github.com/fe80Grau/simple-dolby-ai-audio-enhancer/assets/6680464/31b0a041-3311-451e-af8a-a51b131ffd05)
 
 ## Installation
 # Docker
