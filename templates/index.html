@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple Dolby.io Audio Enhancer</title>
+    <!-- Compressed CSS -->
+    <link rel="stylesheet" href="https://cdn.muicss.com/mui-0.10.3/css/mui.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!-- Compressed JavaScript -->
+    <script src="https://cdn.muicss.com/mui-0.10.3/js/mui.min.js"></script>
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/d-din');
+
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        input[type=file]::file-selector-button {
+            background-color: #eb4573;
+            color: #ffffff;
+            border: 0px;
+            border-right: 1px solid #e5e5e5;
+            padding: 5px 15px 5px 15px;
+            margin-right: 20px;
+            transition: .5s;
+            text-transform: uppercase;
+            font-family: "D-DIN Condensed";
+
+        }
+
+        input[type=file]::file-selector-button:hover {
+            background-color: #000;
+            border: 0px;
+            border-right: 1px solid #e5e5e5;
+
+        }
+
+        h1 {
+            font-size: 4em;
+            margin-bottom: 50px;
+        }
+
+        h1,
+        button {
+            font-family: "D-DIN Condensed" !important;
+
+        }
+
+        button:hover {
+            background: #000 !important;
+        }
+
+        .mui-container {
+            background: rgb(255 255 255 / 97%);
+            position: relative;
+            z-index: 2;
+            border: 2px solid rgb(0 0 0 / 10%);
+            margin-top:5em;
+            padding: 10px;
+        }
+
+        .mui-row {
+            margin-bottom: 10px;
+        }
+
+        .mui-btn {
+            background-color: #eb4573 !important;
+        }
+
+        
+        .mui-select:focus>select, .mui-select>select:focus{
+            border-color:#eb4573 !important;
+        }
+        .mui-textfield>input:focus~label, .mui-textfield>textarea:focus~label, .mui-select:focus>label, .mui-select>select:focus~label{
+            color:#eb4573 !important;
+        }
+        .mui-textfield>input:focus, .mui-textfield>textarea:focus {
+            border-color:#eb4573 !important;
+
+        }
+        /* Toggle */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-label {
+            margin-left: 8px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.toggle-slider {
+            background-color: #eb4573;
+        }
+
+        input:focus+.toggle-slider {
+            box-shadow: 0 0 1px #eb4573;
+        }
+
+        input:checked+.toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .toggle-slider.round {
+            border-radius: 24px;
+        }
+
+        .toggle-slider.round:before {
+            border-radius: 50%;
+        }
+
+        /* Loader */
+        .loader {
+            width: auto;
+            margin: 0 auto;
+            border-radius: 10px;
+            border: 4px solid transparent;
+            position: relative;
+            padding: 1px;
+            display: none;
+        }
+
+        .loader:before {
+            content: '';
+            border: 1px solid #eb4573;
+            border-radius: 10px;
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            bottom: -4px;
+            left: -4px;
+        }
+
+        .loader .loaderBar {
+            position: absolute;
+            border-radius: 10px;
+            top: 0;
+            right: 100%;
+            bottom: 0;
+            left: 0;
+            background: #eb4573;
+            width: 0;
+            animation: borealisBar 2s linear infinite;
+        }
+
+        @keyframes borealisBar {
+            0% {
+                left: 0%;
+                right: 100%;
+                width: 0%;
+            }
+
+            10% {
+                left: 0%;
+                right: 75%;
+                width: 25%;
+            }
+
+            90% {
+                right: 0%;
+                left: 75%;
+                width: 25%;
+            }
+
+            100% {
+                left: 100%;
+                right: 0%;
+                width: 0%;
+            }
+        }
+
+
+        /* ============= Animation background ========= */
+        .container-fluid{
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        background: #FFF;
+        }
+        .background {
+            top:0;
+            background: linear-gradient(132deg, #eb4573, #e5e5e5);
+            background-size: 400% 400%;
+            animation: Gradient 15s ease infinite;
+            position: absolute;
+            z-index: 1;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            padding: 0;
+            margin: 0px;
+        }
+
+        .cube {
+            position: absolute;
+            top: 80vh;
+            left: 45vw;
+            width: 10px;
+            height: 10px;
+            border: solid 1px #D7D4E4;
+            transform-origin: top left;
+            transform: scale(0) rotate(0deg) translate(-50%, -50%);
+            animation: cube 12s ease-in forwards infinite;
+        }
+
+        .cube:nth-child(2n) {
+            border-color: #FFF;
+        }
+
+        .cube:nth-child(2) {
+            animation-delay: 2s;
+            left: 25vw;
+            top: 40vh;
+        }
+
+        .cube:nth-child(3) {
+            animation-delay: 4s;
+            left: 75vw;
+            top: 50vh;
+        }
+
+        .cube:nth-child(4) {
+            animation-delay: 6s;
+            left: 90vw;
+            top: 10vh;
+        }
+
+        .cube:nth-child(5) {
+            animation-delay: 8s;
+            left: 10vw;
+            top: 85vh;
+        }
+
+        .cube:nth-child(6) {
+            animation-delay: 10s;
+            left: 50vw;
+            top: 10vh;
+        }
+
+        /* Animate Background*/
+        @keyframes Gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes cube {
+            from {
+                transform: scale(0) rotate(0deg) translate(-50%, -50%);
+                opacity: 1;
+            }
+
+            to {
+                transform: scale(20) rotate(960deg) translate(-50%, -50%);
+                opacity: 0;
+            }
+        }
+
+    </style>
+    <script>
+        $(document).ready(function () {
+            $(".toggle-switch").click(function () {
+                var checkbox = $(this).find("input");
+                checkbox.prop("checked", !checkbox.prop("checked"));
+                $(this).toggleClass("on");
+            });
+            $("form").submit(function (event) {
+                html_loader = '<div class="loader" style="display:block;"><div class="loaderBar"></div></div>';
+                $("#new").html(html_loader);
+                event.preventDefault();
+
+                var formData = new FormData($(this)[0]);
+
+                $.ajax({
+                    url: "/",
+                    type: "POST",
+                    data: formData,
+                    dataType: 'json',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        // Maneja la respuesta del servidor aquí
+                        console.log(response);
+                        var filename = response.filename;
+
+                        new_html = "<a style=\"font-family:'D-DIN Condensed';\" target=\"popup\" onclick=\"window.open('/" + filename + "','popup','width=600,height=600'); return false;\" class=\"mui-btn mui-btn--raised mui-btn--primary\">Download enhancemet file</a>";
+                        $("#new").html(new_html)
+
+                        // Actualiza la interfaz de usuario con la respuesta del servidor
+                        // Por ejemplo, puedes mostrar un mensaje de éxito o redireccionar al resultado
+                    },
+                    error: function (error) {
+                        // Maneja cualquier error que ocurra durante la solicitud AJAX aquí
+                        console.log(error);
+                        // Muestra un mensaje de error al usuario o realiza alguna otra acción adecuada
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+<!-- Background & animion & navbar & title -->
+<div class="container-fluid">
+    <!-- Background animtion-->
+        <div class="background">
+           <div class="cube"></div>
+           <div class="cube"></div>
+           <div class="cube"></div>
+           <div class="cube"></div>
+          <div class="cube"></div>
+        </div>
+    <div class="mui-container">
+        <h1 class="mui--text-center">Simple Dolby.io Audio Enhancer</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="mui-row">
+                <div class="mui-col-md-12">
+                    <div class="mui-textfield">
+                        <label for="file" class="custom-file-upload">File</label>
+                        <input type="file" name="file" id="file">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mui-row">
+                <div class="mui-col-md-6">
+                    <div class="mui-select">
+                        <select name="content_type">
+                            <option value="conference">Conference</option>
+                            <option value="interview">Interview</option>
+                            <option value="lecture">Lecture</option>
+                            <option value="meeting">Meeting</option>
+                            <option value="mobile_phone">Mobile phone</option>
+                            <option value="music">Music</option>
+                            <option value="podcast">Podcast</option>
+                            <option value="studio">Studio</option>
+                            <option value="voice_over">Voice over</option>
+
+                        </select>
+                        <label>Content type</label>
+                    </div>
+                </div>
+                <div class="mui-col-md-6">
+                    <div class="mui-select">
+                        <select name="sibilance_reduction">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="max">Max</option>
+                        </select>
+                        <label>Sibilance reduction</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mui-row">
+                <div class="mui-col-md-6">
+                    <div class="mui-select">
+                        <select name="noise_reduction">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="max">Max</option>
+                        </select>
+                        <label>Noise reduction</label>
+                    </div>
+                </div>
+                <div class="mui-col-md-6">
+                    <div class="mui-select">
+                        <select name="plosive_reduction">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="max">Max</option>
+                        </select>
+                        <label>Plosive reduction</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mui-row">
+                <div class="mui-col-md-6">
+                    <div class="mui-textfield">
+                        <input type="number" name="target_level" min="-60" max="0" value="-18">
+                        <label>Loudness target level</label>
+                    </div>
+                </div>
+                <div class="mui-col-md-6">
+                    <div class="mui-textfield">
+                        <input type="number" name="speech_threshold" min="0" max="20" value="15">
+                        <label>Loudness speech threshold</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mui-row">
+
+                <div class="mui-col-md-6">
+                    <div class="toggle-container">
+                        <label class="toggle-label">EQ Dynamic range</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" name="dynamics_range_control" value="true" class="toggle-btn">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mui-col-md-6">
+                    <div class="toggle-container">
+                        <label class="toggle-label">Enabling mouth click reduction</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" name="click_reduction" value="true" class="toggle-btn">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mui-row">
+                <div class="mui-col-md-12">
+                    <button class="mui-btn mui-btn--raised mui-btn--primary" type="submit">Process</button>
+                </div>
+            </div>
+
+            <div class="mui-row">
+                <div id="new" class="mui-col-md-12">
+                    <div class="loader">
+                        <div class="loaderBar"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+
+</html>
