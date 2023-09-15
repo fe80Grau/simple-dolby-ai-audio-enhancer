@@ -5,8 +5,11 @@
 * Deploy with docker (or running python main.py)
 * Enjoy a simple web UI with unlimited time AI Enhancer 😋 (Uploaded videos will be compressed with h264)
 * A guide to understand the params in GUI. https://docs.dolby.io/media-apis/docs/audio-quality (look for the Audio Guide section of the left menu)
-
 ![image](https://github.com/fe80Grau/simple-dolby-ai-audio-enhancer/assets/6680464/31b0a041-3311-451e-af8a-a51b131ffd05)
+![image](https://github.com/fe80Grau/simple-dolby-ai-audio-enhancer/assets/6680464/bf94d103-71d7-4a6e-bc5e-f30620d515d1)
+
+
+<a href="https://www.buymeacoffee.com/fe80grau" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="width: 120px !important;" ></a>
 
 ## Installation
 # Docker
