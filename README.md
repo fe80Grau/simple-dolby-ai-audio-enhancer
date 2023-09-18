@@ -1,9 +1,9 @@
 # Simple Dolby AI Audio Enhancer
-* Try the power here with the original sample. https://dashboard.dolby.io/media-demo/ (Only enhance 30 secs)
-* Login in Dolby.io Dashboard to get App key and App secret.
-* Clone this repo and rename config.example.json to config.json, paste inside your Dolby key and secret
+* Test the power here.. https://dashboard.dolby.io/media-demo/ (Only enhance 30 secs, original sample)
+* Login in Dolby.io Dashboard to get App key and App secret. (https://docs.dolby.io/media-apis/docs/guides-api-authentication#generating-an-api-token)
+* Clone this repo and rename config.example.json to config.json, enter your Dolby key and secret
 * Deploy with docker (or running python main.py)
-* Enjoy a simple web UI with unlimited time AI Enhancer 😋 (Uploaded videos will be compressed with h264)
+* Enjoy a simple web AI Enhancer with no time limits 😋 (Uploaded videos will be compressed with h264)
 * A guide to understand the params in GUI. https://docs.dolby.io/media-apis/docs/audio-quality (look for the Audio Guide section of the left menu)
 ![image](https://github.com/fe80Grau/simple-dolby-ai-audio-enhancer/assets/6680464/31b0a041-3311-451e-af8a-a51b131ffd05)
 ![image](https://github.com/fe80Grau/simple-dolby-ai-audio-enhancer/assets/6680464/bf94d103-71d7-4a6e-bc5e-f30620d515d1)
